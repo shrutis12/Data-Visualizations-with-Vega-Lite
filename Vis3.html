@@ -1,0 +1,126 @@
+<html>
+<head>
+    <title> COMP40610-Information Visualization Assignment</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+</head>
+<body>
+    <table style="width: 850px" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+    <td style="vertical-align: top;">Shruti Palamadai</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+    <td style="vertical-align: top;">19200851</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv" target="_blank" rel="noopener">Coffee Quality Database</a>.</p>
+    <p>This data contains reviews of 1312 arabica coffee beans from the Coffee Quality Institute's trained reviewers. It contains details about the beans' country of origin,number of bags reviewed, owner info etc. It also contains ratings of the coffee according to various factors such as aroma,flavor,acidity etc. Overall rating is provided as Total Cup Points.</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+    <td style="vertical-align: top;">Is there any relation between the Acidity rating of the coffee and the cup points received for it?</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+  <div id="vis" class="container"></div>
+  <script type="text/javascript">
+    var yourVlSpec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "Processing\\.Method": "string"
+      }
+    }
+  },
+  "transform": [
+    {
+      "filter": "datum.Acidity > 0"
+    },
+    {
+      "filter": "datum['Total\\.Cup\\.Points'] >0"
+    },
+    {
+      "filter": "datum['Processing\\.Method']"
+    }
+  ],
+  "mark": {
+    "type": "point"
+  },
+  "encoding": {
+    "x": {
+      "field": "Acidity",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          5,
+          9
+        ]
+      }
+    },
+    "y": {
+      "field": "Total\\.Cup\\.Points",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          55,
+          95
+        ]
+      },
+      "axis":{
+        "title":"Total Cup Points"
+      }
+    },
+    "color": {
+      "field": "Processing\\.Method",
+      "type": "nominal"
+    },
+    "tooltip": {
+      "field": "Processing\\.Method",
+      "type": "nominal"
+    }
+  },
+  
+  "title": {
+    "text": "Cup points vs acidity for different processing methods",
+    "anchor": "middle"
+  },
+  "width": 700,
+  "height": 500,
+  "config": {}
+}
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">This scatter plot highlights the co-relation between the acidity rating and the cup points received for each processing method.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insight:</strong></td>
+<td style="vertical-align: top;">There seems to be a mostly linear relationship between the two. Higher the acidity,higher rating received. According to this article - <a href="https://www.coffeereview.com/interpret-coffee/"> Interpret Coffee</a> without the right amount of acidity, the taste of coffee would be dull. There are a few outliers which have received less ratings and those seem to mostly come from the Semi-washed/Semi-pulp and Washed/Wet methods. From the above data and what we saw before from the previous visualization there could be a case made for which processing method is better with a balanced acidity.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design considerations</strong></td>
+<td style="vertical-align: top;">I have used a scatter plot with colors for the processing method too see how that made a difference in the relationship between acidity and overall points. I tried using a line chart too but it's easier to recognize outliers using a scatter plot. I constantly adjusted the scale of the graph until there was a balance between both axis and distance between the points was better.</td>
+</tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">I have filtered out the rows which did not specify any processing method and also considered only the rows with acidity and points greater than 0.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

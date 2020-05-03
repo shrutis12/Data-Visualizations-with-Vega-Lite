@@ -1,0 +1,113 @@
+<html>
+<head>
+    <title> COMP40610-Information Visualization Assignment</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+</head>
+<body>
+    <table style="width: 850px" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+    <td style="vertical-align: top;">Shruti Palamadai</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+    <td style="vertical-align: top;">19200851</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv" target="_blank" rel="noopener">Coffee Quality Database</a>.</p>
+    <p>This data contains reviews of 1312 arabica coffee beans from the Coffee Quality Institute's trained reviewers. It contains details about the beans' country of origin,number of bags reviewed, owner info etc. It also contains ratings of the coffee according to various factors such as aroma,flavor,acidity etc. Overall rating is provided as Total Cup Points.</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+    <td style="vertical-align: top;">Which countries' coffee has been reviewed?</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+  <div id="vis" class="container"></div>
+  <script type="text/javascript">
+    var yourVlSpec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {
+      "aggregate": [
+        {
+          "op": "sum",
+          "field": "Number\\.of\\.Bags",
+          "as": "total no of bags"
+        }
+      ],
+      "groupby": [
+        "Country\\.of\\.Origin"
+      ]
+    },
+    {
+      "filter":"datum['Country\\.of\\.Origin']"
+    }
+  ],
+  "mark": "bar",
+  "encoding": {
+    "x": {
+      "field": "total no of bags",
+      "type": "quantitative"
+    },
+    "y": {
+      "field": "Country\\.of\\.Origin",
+      "type": "nominal",
+      "sort": {
+        "field": "total no of bags",
+        "order": "descending"
+      },
+      "axis":{
+        "title":"Country Of Origin"
+      }
+    },
+    "tooltip": {
+      "field": "total no of bags",
+      "type": "quantitative"
+    }
+  },
+  "title": {
+    "text": "Countrywise number of cofee bags reviewed",
+    "anchor": "middle"
+  },
+  "width":500,
+  "config": {}
+}
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">This bar chart shows what the country of origin is for the coffee reviewed and how many bags of it were considered in the review</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insight:</strong></td>
+<td style="vertical-align: top;">We can see that most of the coffee bags reviewed are from South/Latin American countries. According to this article - <a href="https://www.worldatlas.com/articles/top-coffee-producing-countries.html"> Top coffee producing countries</a> these do seem to be the countries which produce and export most coffee beans to the rest of the world and hence it makes sense why the coffee from these particular countries was more prominantly tested for its qualities.  </td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design considerations</strong></td>
+<td style="vertical-align: top;">I have used a bar chart with the number of bags for each country in descending order as this is the most easiest way to compare the quantity of bags for each country. Sometimes for an initial introductory analysis of the data it is best to start with something simple.</td>
+</tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">Since the raw data contained multiple rows for each country I have used transform and aggregate to sum up the number of bags for each unique country. I have also filtered out the countries which had an empty string.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

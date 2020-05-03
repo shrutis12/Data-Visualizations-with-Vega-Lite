@@ -1,0 +1,130 @@
+<html>
+<head>
+    <title> COMP40610-Information Visualization Assignment</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+</head>
+<body>
+    <table style="width: 850px" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+    <td style="vertical-align: top;">Shruti Palamadai</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+    <td style="vertical-align: top;">19200851</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv" target="_blank" rel="noopener">Coffee Quality Database</a>.</p>
+    <p>This data contains reviews of 1312 arabica coffee beans from the Coffee Quality Institute's trained reviewers. It contains details about the beans' country of origin,number of bags reviewed, owner info etc. It also contains ratings of the coffee according to various factors such as aroma,flavor,acidity etc. Overall rating is provided as Total Cup Points.</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+    <td style="vertical-align: top;">Which processing methods have garnered more points?</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+  <div id="vis" class="container"></div>
+  <script type="text/javascript">
+    var yourVlSpec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "Processing\\.Method": "string"
+      }
+    }
+  },
+  "transform": [
+    {
+      "filter": "datum['Processing\\.Method']"
+    },
+    {
+      "aggregate": [
+        {
+          "as": "Average cup points",
+          "op": "average",
+          "field": "Total\\.Cup\\.Points"
+        }
+      ],
+      "groupby": [
+        "Processing\\.Method"
+      ]
+    }
+  ],
+  "mark": {
+    "type": "bar",
+    "cornerRadiusEnd": 4
+  },
+  "encoding": {
+    "x": {
+      "field": "Processing\\.Method",
+      "type": "nominal",
+      "sort": {
+        "field": "Average cup points",
+        "order": "descending"
+      },
+      "axis": {
+        "title":"Processing Methods"
+      }
+    },
+    "y": {
+      "field": "Average cup points",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          80,
+          83
+        ]
+      }
+    },
+    "color": {
+      "field": "Processing\\.Method",
+      "type": "nominal"
+    },
+    "tooltip": {
+      "field": "Average cup points",
+      "type": "quantitative"
+    }
+  },
+  "title": {
+    "text": "Total Average Coffee Cup Points for each Processing Method",
+    "anchor": "middle"
+  },
+  "width": 400,
+  "height":400,
+  "config": {}
+}
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">This bar chart shows the different processing methods and what average cup rating they have received. The total cup points in the original data were derived from different factors such as aroma,acidity,flavour etc.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insight:</strong></td>
+<td style="vertical-align: top;">We can see that natural/honey processed coffee has received highest rating. According to this article - <a href="https://www.perfectdailygrind.com/2016/07/washed-natural-honey-coffee-processing-101/"> Coffee processing 101</a> there is an argument made that there are many who believe this process actually has the potential to create the most flavourful coffees. Another article - <a href="https://www.perfectdailygrind.com/2018/01/producers-guide-choosing-processing-method/"> Choosing Coffee Processing methods</a> states that Washed/Wet processing might infact be better for producers. Our data only shows the average rating received for the method. But we might need to dig deeper into why certain processing methods received higher ratings as it might depend on factors such as cost and geography/climate. </td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design considerations</strong></td>
+<td style="vertical-align: top;">I have used a colored bar chart with a different color for each processing method so that they are easily distinguishable. As the initial question tended towards a comparision, I also sorted the bars in decending order of ratings. I also adjusted the scale of average ratings as all of them fell in the 80-85 range.</td>
+</tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">I have filtered out the rows which did not specify any processing method as it wouldn't have made sense to include them for this analysis. Also since I wanted the average points for each processing method I applied an aggregate transform for it.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

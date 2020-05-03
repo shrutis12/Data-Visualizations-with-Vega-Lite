@@ -1,0 +1,271 @@
+{
+"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "hconcat":[
+    {
+        "width":100,
+        "height":700,
+        "mark": "bar",
+        "data": {
+              "url": "https://raw.githubusercontent.com/colmr/vis_class/master/primary_schools.csv"
+              },
+              "transform": [
+                {
+                  "filter": {
+                    "selection": "Select_Interval"
+                    }
+                    },
+                    {
+                  "filter": {
+                    "selection": "Select_Sex"
+                    }
+                    }
+               ],
+  "encoding": {
+    "x":{
+      "type": "quantitative",
+      "aggregate":"count",
+      "axis":{"title": "Number of schools"}
+        },
+    "y": {
+      "field": "County",
+      "type": "nominal",
+      "title": null
+    },
+    "color": {
+					"field": "Sex",
+					"type": "nominal",
+					"scale": {
+						"domain": [
+							"Boys",
+							"Girls",
+							"Mixed"
+						],
+						"range": [
+							"#66c2a5",
+							"#5254a3",
+							"#1f77b4"
+						]
+					}
+				},
+        "order": {
+					"field": "Sex",
+					"type": "nominal",
+					"aggregate": "count",
+					"sort": "descending"
+				},
+        "fillOpacity": {
+      "condition": {"selection": "Select_County", "value": 1},
+      "value": 0.3
+    }
+      },
+          "selection": {
+          "highlight": {"type": "multi", "on":"mouseover"},
+				  "Select_County": {
+					"type": "multi",
+					"encodings": [
+						"y"
+					]
+				}
+			}
+    },
+      {
+        "vconcat": [
+          {
+            "width":400,
+            "height":600,
+            "data": {
+              "url": "https://raw.githubusercontent.com/colmr/vis_class/master/Ireland_custom_topjson.json",
+              "format": {
+          "type": "topojson",
+          "feature": "IRL_adm1"
+        }
+      },
+            "layer": [
+              {
+                "mark": {
+                  "type": "geoshape",
+                  "stroke": "white",
+                  "fill":"#ccc"
+                        }
+              },
+              {
+                "data": {
+								"url": "https://raw.githubusercontent.com/colmr/vis_class/master/primary_schools.csv"
+							},
+                "mark": "circle",
+                "transform": [
+								{
+									"filter": {
+										"selection": "Select_Interval"
+									}
+								},
+								{
+									"filter": {
+										"selection": "Select_Sex"
+									}
+								},
+								{
+									"filter": {
+										"selection": "Select_County"
+									}
+								}
+							],
+              "selection": {
+								"Select_Sex": {
+									"type": "multi",
+									"fields": ["Sex"],
+									"bind": "legend"
+								                    }
+							             },
+                "encoding": {
+                   "longitude": {
+                        "field": "Long",
+                        "type": "quantitative"
+                                },
+                    "latitude": {
+                        "field": "Lat",
+                        "type": "quantitative"
+                                },
+                    "color": {
+                      	"field": "Sex",
+      									"type": "nominal",
+      									"scale": {
+    										"domain": [
+  											"Boys",
+  											"Girls",
+  											"Mixed"
+              										],
+    										"range": [
+      											"#a3ff4d",
+    										  	"#b066ff",
+      											"#4763d1"
+            										]
+            									}
+            								},
+        		            "size": {
+                   		  "title": "Total",
+                        "field": "Total",
+                        "type": "quantitative",
+                        "scale": {
+                        "type": "threshold",
+                        "domain": [251, 501, 750],
+                        "range": [10, 100, 250, 400]
+                                 }
+                        }
+                      }
+                    }
+                  ]
+
+                },
+                {
+					"data": {
+						"url": "https://raw.githubusercontent.com/colmr/vis_class/master/primary_schools.csv"
+					},
+					"layer": [
+						{
+							"transform": [
+								{
+									"filter": {
+										"selection": "Select_County"
+									}
+								},
+								{
+									"filter": {
+										"selection": "Select_Sex"
+									}
+								}
+							],
+							"selection": {
+								"Select_Interval": {
+									"type": "interval",
+									"encodings": [
+										"x"
+									]
+								}
+							},
+							"width": 400,
+							"height": 75,
+							"mark": {
+								"type": "bar"
+							},
+							"encoding": {
+								"x": {
+									"bin": {
+										"step": 20
+									},
+									"type": "quantitative",
+									"field": "Total"
+								},
+								"y": {
+									"type": "quantitative",
+									"aggregate": "count"
+								}
+							}
+						},
+						{
+							"width": 300,
+							"height": 100,
+							"mark": {
+								"type": "bar",
+								"color": "black"
+							},
+							"transform": [
+								{
+									"filter": {
+										"selection": "Select_County"
+									}
+								},
+								{
+									"filter": {
+										"selection": "Select_Sex"
+									}
+								},
+								{
+									"filter": {
+										"selection": "Select_Interval"
+									}
+								}
+							],
+							"encoding": {
+								"x": {
+									"bin": {
+										"step": 20
+									},
+									"type": "quantitative",
+									"field": "Total",
+									"axis": {
+										"title": "Number of Students",
+										"titleFontSize": 14
+									}
+								},
+								"y": {
+									"type": "quantitative",
+									"aggregate": "count",
+									"axis": {
+										"title": "Schools",
+										"titleFontSize": 14
+									}
+								}
+							}
+						}
+					]
+				}
+      ]
+    }
+  ],
+  "title": {
+    "text": "Irish Primary School Explorer",
+    "anchor": "middle",
+    "fontSize":24
+           },
+ "config": {
+   "concat":{"spacing": 15},
+ "axis": {"labelFontSize":12,
+          "titleFontSize":14, 
+          "titlePadding":12},
+ "legend": {
+      "orient":"right",
+      "titleFontSize": 12,
+      "labelFontSize": 12}
+            }
+}
